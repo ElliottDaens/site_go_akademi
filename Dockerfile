@@ -49,6 +49,9 @@ COPY --from=frontend /app/public/build /var/www/html/public/build
 COPY docker/nginx-laravel.conf /etc/nginx/conf.d/default.conf.template
 RUN rm -f /etc/nginx/conf.d/default.conf
 
+# PHP-FPM : définir user/group pour le pool www (obligatoire quand supervisord tourne en root)
+RUN echo 'user = nobody' >> /etc/php84/php-fpm.d/www.conf && echo 'group = nobody' >> /etc/php84/php-fpm.d/www.conf
+
 COPY docker/start.sh /start-app.sh
 RUN chmod +x /start-app.sh
 
