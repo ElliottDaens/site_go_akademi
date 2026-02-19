@@ -33,27 +33,32 @@ COPY database database
 RUN npm run build
 
 # -----------------------------------------------------------------------------
-# Stage 2 : application Laravel (PHP + nginx)
+# Stage 2 : application Laravel (PHP 8.4 + nginx via trafex/php-nginx)
 # -----------------------------------------------------------------------------
-FROM richarvey/nginx-php-fpm:3.1.6
+FROM trafex/php-nginx:latest
+
+USER root
+
+RUN apk add --no-cache gettext-envsubst
 
 COPY . /var/www/html
 COPY --from=vendor /app/vendor /var/www/html/vendor
 COPY --from=frontend /app/public/build /var/www/html/public/build
 
-WORKDIR /var/www/html
-
-ENV SKIP_COMPOSER 1
-ENV WEBROOT /var/www/html/public
-ENV PHP_ERRORS_STDERR 1
-ENV RUN_SCRIPTS 1
-ENV REAL_IP_HEADER 1
-ENV APP_ENV production
-ENV APP_DEBUG false
-ENV LOG_CHANNEL stderr
-ENV COMPOSER_ALLOW_SUPERUSER 1
+# Nginx : document root = Laravel public, port = $PORT (Render)
+COPY docker/nginx-laravel.conf /etc/nginx/conf.d/default.conf.template
+RUN rm -f /etc/nginx/conf.d/default.conf
 
 COPY docker/start.sh /start-app.sh
 RUN chmod +x /start-app.sh
 
+RUN chown -R nobody:nobody /var/www/html
+
+ENV APP_ENV=production
+ENV APP_DEBUG=false
+ENV LOG_CHANNEL=stderr
+
+# Démarrer en root pour que start-app.sh puisse écrire la config nginx (PORT)
+USER root
+EXPOSE 8080
 CMD ["/start-app.sh"]
