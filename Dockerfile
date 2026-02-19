@@ -39,7 +39,7 @@ FROM trafex/php-nginx:latest
 
 USER root
 
-RUN apk add --no-cache gettext-envsubst
+RUN apk add --no-cache bash gettext-envsubst
 
 COPY . /var/www/html
 COPY --from=vendor /app/vendor /var/www/html/vendor
