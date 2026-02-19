@@ -33,35 +33,27 @@ COPY database database
 RUN npm run build
 
 # -----------------------------------------------------------------------------
-# Stage 2 : application Laravel (PHP 8.4 + nginx via trafex/php-nginx)
+# Stage 2 : application Laravel (PHP + nginx)
 # -----------------------------------------------------------------------------
-FROM trafex/php-nginx:latest
-
-USER root
-
-RUN apk add --no-cache bash gettext-envsubst
+FROM richarvey/nginx-php-fpm:3.1.6
 
 COPY . /var/www/html
 COPY --from=vendor /app/vendor /var/www/html/vendor
 COPY --from=frontend /app/public/build /var/www/html/public/build
 
-# Nginx : document root = Laravel public, port = $PORT (Render)
-COPY docker/nginx-laravel.conf /etc/nginx/conf.d/default.conf.template
-RUN rm -f /etc/nginx/conf.d/default.conf
+WORKDIR /var/www/html
 
-# PHP-FPM : définir user/group pour le pool www (obligatoire quand supervisord tourne en root)
-RUN echo 'user = nobody' >> /etc/php84/php-fpm.d/www.conf && echo 'group = nobody' >> /etc/php84/php-fpm.d/www.conf
+ENV SKIP_COMPOSER 1
+ENV WEBROOT /var/www/html/public
+ENV PHP_ERRORS_STDERR 1
+ENV RUN_SCRIPTS 1
+ENV REAL_IP_HEADER 1
+ENV APP_ENV production
+ENV APP_DEBUG false
+ENV LOG_CHANNEL stderr
+ENV COMPOSER_ALLOW_SUPERUSER 1
 
 COPY docker/start.sh /start-app.sh
 RUN chmod +x /start-app.sh
 
-RUN chown -R nobody:nobody /var/www/html
-
-ENV APP_ENV=production
-ENV APP_DEBUG=false
-ENV LOG_CHANNEL=stderr
-
-# Démarrer en root pour que start-app.sh puisse écrire la config nginx (PORT)
-USER root
-EXPOSE 8080
 CMD ["/start-app.sh"]

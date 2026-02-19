@@ -27,8 +27,17 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [1.0.1] - 2026-02-19
+
+### Retiré
+
+- **Hébergement Render/Docker** : suppression de la config déploiement (render.yaml, DEPLOY.md, .dockerignore), retour du Dockerfile sur l’image richarvey/nginx-php-fpm, script de démarrage simplifié, et retrait du forçage HTTPS en prod dans AppServiceProvider. L’hébergement sera géré autrement.
+
+---
+
 ## [Unreleased]
 
 - Aucune modification en attente pour l’instant.
 
+[1.0.1]: https://github.com/ElliottDaens/site_go_akademi/releases/tag/v1.0.1
 [1.0.0]: https://github.com/ElliottDaens/site_go_akademi/releases/tag/v1.0.0
