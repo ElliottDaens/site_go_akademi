@@ -40,6 +40,12 @@ npm run dev
 
 Voir **[README_DEV.md](README_DEV.md)** pour le détail (build, mode sombre, dépannage).
 
+## Mettre le site en ligne (hébergement)
+
+GitHub héberge **le code**, pas l’exécution PHP. Pour que le site soit en ligne avec Laravel, il faut le déployer sur un hébergeur (Render, IONOS, etc.) qui se connecte à ce dépôt.
+
+**Instructions détaillées** : voir **[DEPLOY.md](DEPLOY.md)** (Render gratuit, déploiement automatique à chaque push).
+
 ## Versioning
 
 Les versions sont suivies dans **[CHANGELOG.md](CHANGELOG.md)** et par les [tags de release](https://github.com/ElliottDaens/site_go_akademi/releases) (ex. `v1.0.0`).
