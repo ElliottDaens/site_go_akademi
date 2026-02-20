@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Si la racine du site pointe sur ce dossier (et pas sur public/),
+    # rediriger toutes les requêtes vers public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
